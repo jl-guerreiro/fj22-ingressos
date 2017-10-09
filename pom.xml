@@ -9,6 +9,12 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
+<developers>
+ <developer>
+	<name>Guerreiro</name>
+	<email>jose.guerreiro@telefonica.com</email>
+ </developer>
+</developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
