@@ -17,7 +17,6 @@ public class SalaDao {
     private EntityManager manager;
 
     public Sala findOne(Integer id) {
-
         return manager.find(Sala.class, id);
     }
 
