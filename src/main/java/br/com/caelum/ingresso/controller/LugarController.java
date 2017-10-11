@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -59,6 +60,23 @@ public class LugarController {
         salaDao.save(sala);
 
         return new ModelAndView("redirect:/admin/sala/"+salaId+"/lugares/");
+    }
+    
+    @GetMapping("/admin/lugar/{id}/full")
+    @Transactional
+    public ModelAndView salvaFull(@PathVariable("id") Integer salaId){
+    	String[] fila = new String[]{"A","B","C","D","E","F","G"};
+    	int assento = 20;
+    	Sala sala = salaDao.findOne(salaId);
+    	for(String s : fila){
+    		for(int i=0;i<assento;i++){
+    			Lugar l = new Lugar(s,i+1);
+    			lugarDao.save(l);
+    			sala.add(l);
+    			salaDao.save(sala);
+    		}
+    	}
+    	return new ModelAndView("redirect:/admin/sala/"+salaId+"/lugares/");
     }
 
 }

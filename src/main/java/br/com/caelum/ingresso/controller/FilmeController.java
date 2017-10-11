@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.com.caelum.ingresso.client.ImdbClient;
 import br.com.caelum.ingresso.dao.FilmeDao;
 import br.com.caelum.ingresso.dao.SessaoDAO;
+import br.com.caelum.ingresso.model.DetalhesFilme;
 import br.com.caelum.ingresso.model.Filme;
 import br.com.caelum.ingresso.model.Sessao;
 
@@ -33,6 +35,9 @@ public class FilmeController {
 
     @Autowired
     private SessaoDAO sessaoDao;
+    
+    @Autowired
+    private ImdbClient imdb;
     
 
     @GetMapping({"/admin/filme", "/admin/filme/{id}"})
@@ -57,6 +62,9 @@ public class FilmeController {
         if (result.hasErrors()) {
             return form(Optional.ofNullable(filme.getId()), filme);
         }
+        
+        Optional<DetalhesFilme> df = imdb.request(filme, DetalhesFilme.class);
+        if((df.orElse(new DetalhesFilme())).getTitulo()==null) return form(Optional.ofNullable(filme.getId()), filme);
 
         filmeDao.save(filme);
 
@@ -76,7 +84,7 @@ public class FilmeController {
         return modelAndView;
     }
     
-    @GetMapping("/filme/em-cartaz/")
+    @GetMapping("/filme/em-cartaz")
     public ModelAndView emCartaz(){
     	ModelAndView mav = new ModelAndView("filme/em-cartaz");
     	mav.addObject("filmes",filmeDao.findAll());
@@ -88,12 +96,12 @@ public class FilmeController {
     	ModelAndView mav = new ModelAndView("filme/detalhe");
     	Filme filme = filmeDao.findOne(id);
     	List<Sessao> lsSessao = sessaoDao.buscaSessoesDoFilme(filme);
+    	Optional<DetalhesFilme> df = imdb.request(filme, DetalhesFilme.class);
     	mav.addObject("sessoes",lsSessao);
+    	mav.addObject("detalhes", df.orElse(new DetalhesFilme()));
     	return mav;
     }
     
-    
-
 
     @DeleteMapping("/admin/filme/{id}")
     @ResponseBody

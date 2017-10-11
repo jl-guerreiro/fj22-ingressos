@@ -33,4 +33,8 @@ public class SessaoDAO {
 		return em.createQuery("select s from Sessao s where s.filme = :filme", Sessao.class)
 				.setParameter("filme",filme).getResultList();
 	}
+	
+	public Sessao findOne(Integer id){
+		return em.find(Sessao.class, id);
+	}
 }
