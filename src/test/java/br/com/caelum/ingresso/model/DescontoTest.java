@@ -7,10 +7,6 @@ import java.time.LocalTime;
 import org.junit.Assert;
 import org.junit.Test;
 
-import br.com.caelum.ingresso.model.desconto.DescontoDeTrintaPorCentoParaBancos;
-import br.com.caelum.ingresso.model.desconto.DescontoEstudante;
-import br.com.caelum.ingresso.model.desconto.SemDesconto;
-
 
 public class DescontoTest {
 	
@@ -19,7 +15,7 @@ public class DescontoTest {
 		Sala sa = new Sala("", new BigDecimal("20.5"));
 		Filme f = new Filme("", Duration.ofMinutes(120),"", new BigDecimal("12"));
 		Sessao se = new Sessao(sa,f,LocalTime.parse("10:00:00"));
-		Ingresso i = new Ingresso(se, new DescontoDeTrintaPorCentoParaBancos());
+		Ingresso i = new Ingresso(se, TipoIngresso.BANCO, new Lugar("A",1));
 		BigDecimal esperado = new BigDecimal("22.75");
 		Assert.assertEquals(esperado, i.getPreco());
 	}
@@ -29,7 +25,7 @@ public class DescontoTest {
 		Sala sa = new Sala("", new BigDecimal("20.5"));
 		Filme f = new Filme("", Duration.ofMinutes(120),"", new BigDecimal("12"));
 		Sessao se = new Sessao(sa,f,LocalTime.parse("10:00:00"));
-		Ingresso i = new Ingresso(se, new DescontoEstudante());
+		Ingresso i = new Ingresso(se,  TipoIngresso.MEIA, new Lugar("A",1));
 		BigDecimal esperado = new BigDecimal("16.25");
 		Assert.assertEquals(esperado, i.getPreco());
 	}
@@ -39,7 +35,7 @@ public class DescontoTest {
 		Sala sa = new Sala("", new BigDecimal("20.5"));
 		Filme f = new Filme("", Duration.ofMinutes(120),"", new BigDecimal("12"));
 		Sessao se = new Sessao(sa,f,LocalTime.parse("10:00:00"));
-		Ingresso i = new Ingresso(se, new SemDesconto());
+		Ingresso i = new Ingresso(se,  TipoIngresso.INTEIRO, new Lugar("A",1));
 		BigDecimal esperado = new BigDecimal("32.5");
 		Assert.assertEquals(esperado, i.getPreco());
 	}
